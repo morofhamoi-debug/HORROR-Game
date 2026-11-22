@@ -1,21 +1,43 @@
 import { box } from './materials.js';
 
 export function buildWalls(THREE, group, m) {
-  const wallH = 2.9, t = 0.22;
-  // Exterior shell: four separate walls leave a clear interior volume.
-  box(THREE, group, [12, wallH, t], [0, wallH/2, -5], m.plaster);
-  box(THREE, group, [12, wallH, t], [0, wallH/2, 5], m.plaster);
-  box(THREE, group, [t, wallH, 10], [-6, wallH/2, 0], m.plaster);
-  box(THREE, group, [t, wallH, 10], [6, wallH/2, 0], m.plaster);
-  // Main partitions. Openings are intentionally left between room zones.
-  box(THREE, group, [t, wallH, 3.0], [-1.0, wallH/2, -3.5], m.innerWall);
-  box(THREE, group, [t, wallH, 3.1], [-1.0, wallH/2, 3.45], m.innerWall);
-  box(THREE, group, [4.0, wallH, t], [3.9, wallH/2, -1.2], m.innerWall);
-  box(THREE, group, [2.0, wallH, t], [-4.9, wallH/2, 1.2], m.innerWall);
-  // Skirting boards add a readable architectural scale.
-  const skirting = m.trim;
-  box(THREE, group, [11.5, .12, .06], [0, .08, -4.86], skirting, false);
-  box(THREE, group, [11.5, .12, .06], [0, .08, 4.86], skirting, false);
-  box(THREE, group, [.06, .12, 9.5], [-5.86, .08, 0], skirting, false);
-  box(THREE, group, [.06, .12, 9.5], [5.86, .08, 0], skirting, false);
+  const H = 2.9, T = .22;
+  const wall = (size, pos) => box(THREE, group, size, pos, m.plaster);
+  const inner = (size, pos) => box(THREE, group, size, pos, m.innerWall);
+
+  // Back wall: two real window openings, with sill and lintel sections.
+  const backWindows = [{c:-3.8,w:1.65},{c:1.25,w:1.55}];
+  let cursor=-6;
+  for (const win of backWindows) {
+    const left=win.c-win.w/2, right=win.c+win.w/2;
+    if(left>cursor) wall([left-cursor,H,T],[(left+cursor)/2,H/2,-5]);
+    wall([win.w,1.19,T],[win.c,.595,-5]);
+    wall([win.w,.53,T],[win.c,2.635,-5]);
+    cursor=right;
+  }
+  if(cursor<6) wall([6-cursor,H,T],[(6+cursor)/2,H/2,-5]);
+
+  // Front wall: full-height entrance opening, centered on the house.
+  wall([5.44,H,T],[-3.28,H/2,5]);
+  wall([5.44,H,T],[3.28,H/2,5]);
+  wall([1.12,.78,T],[0,2.51,5]);
+
+  // Side walls with one window opening each.
+  wall([T,1.22,8.82],[-6,.61,-.59]);
+  wall([T,.56,1.18],[-6,2.62,-1]);
+  wall([T,1.22,8.82],[6,.61,.81]);
+  wall([T,.56,1.18],[6,2.62,1.4]);
+
+  // Interior partitions. Doorways are deliberately kept open for navigation.
+  inner([T,H,2.55],[-1,H/2,-3.725]);
+  inner([T,H,2.45],[-1,H/2,3.775]);
+  inner([3.25,H,T],[4.375,H/2,-1.2]);
+  inner([1.05,H,T],[-5.475,H/2,1.2]);
+
+  // Baseboards around the perimeter.
+  const b=.12;
+  wall([11.5,b,.06],[0,.08,-4.84]);
+  wall([11.5,b,.06],[0,.08,4.84]);
+  wall([.06,b,9.5],[-5.84,.08,0]);
+  wall([.06,b,9.5],[5.84,.08,0]);
 }
