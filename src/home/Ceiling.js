@@ -1,6 +1,7 @@
 import { box } from './materials.js';
 
 export function buildCeiling(THREE, group, m) {
+  group.userData.ceilingFixtures = [];
   box(THREE, group, [12, .16, 10], [0, 2.98, 0], m.plaster, false, true);
 
   // Continuous ceiling coving around the room perimeter.
@@ -23,5 +24,6 @@ export function buildCeiling(THREE, group, m) {
     light.position.set(x, 2.56, z);
     light.castShadow = false;
     group.add(light);
+    group.userData.ceilingFixtures.push({ light, diffuser });
   }
 }
