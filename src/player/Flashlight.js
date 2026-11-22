@@ -1,4 +1,4 @@
-export function createFlashlight(THREE, camera) {
+export function createFlashlight(THREE, camera, audio) {
   const housing = new THREE.Group();
   housing.name = 'PLAYER_FLASHLIGHT';
 
@@ -70,6 +70,7 @@ export function createFlashlight(THREE, camera) {
     enabled = Boolean(value);
     housing.visible = enabled;
     lensMaterial.emissiveIntensity = enabled ? .9 : .08;
+    audio?.playFlashlight(enabled);
     if (button) {
       button.classList.toggle('active', enabled);
       button.setAttribute('aria-pressed', String(enabled));
