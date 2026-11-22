@@ -35,7 +35,7 @@ export function createInteractionSystem({ THREE, camera, roots, collisionWorld }
     prompt?.classList.toggle('hidden', !target || panelOpen);
     if (interactButton) {
       interactButton.classList.toggle('hidden', !target || panelOpen);
-      interactButton.textContent = meta?.type === 'inspect' ? 'ОСМОТРЕТЬ' : 'ВЗАИМОДЕЙСТВОВАТЬ';
+      interactButton.textContent = meta?.type === 'inspect' ? 'ОСМОТРЕТЬ' : label.toLocaleUpperCase('ru-RU');
     }
   }
 
