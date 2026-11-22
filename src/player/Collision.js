@@ -42,9 +42,9 @@ const SOLID_RECTS = [
   { minX: -5.64, maxX: -4.86, minZ: 4.11, maxZ: 4.59 },
 
   // Hallway console, shoe rack and umbrella stand.
-  { minX: -0.575, maxX: 0.575, minZ: 3.38, maxZ: 3.72 },
-  { minX: -1.46, maxX: -0.64, minZ: 3.94, maxZ: 4.36 },
-  { minX: 0.81, maxX: 1.09, minZ: 4.06, maxZ: 4.34 }
+  { minX: 0.425, maxX: 1.575, minZ: 3.38, maxZ: 3.72 },
+  { minX: 0.61, maxX: 1.39, minZ: 3.94, maxZ: 4.36 },
+  { minX: 1.86, maxX: 2.14, minZ: 3.51, maxZ: 3.79 }
 ];
 
 function circleHitsRect(x, z, rect, radius) {
