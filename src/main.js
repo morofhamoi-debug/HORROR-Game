@@ -9,24 +9,24 @@ const errorBox = document.querySelector('#error');
 
 try {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x8c928d);
-  scene.fog = new THREE.Fog(0x8c928d, 18, 48);
+  scene.background = new THREE.Color(0x777e79);
+  scene.fog = new THREE.Fog(0x777e79, 22, 62);
 
-  const camera = new THREE.PerspectiveCamera(74, innerWidth / innerHeight, 0.1, 100);
-  camera.position.set(0, 1.68, 7.2);
+  const camera = new THREE.PerspectiveCamera(72, innerWidth / innerHeight, 0.1, 120);
+  camera.position.set(0, 1.68, 7.1);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));
   renderer.setSize(innerWidth, innerHeight);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.12;
   document.body.appendChild(renderer.domElement);
 
-  scene.add(new THREE.HemisphereLight(0xdce2df, 0x38332c, 1.25));
-  const sun = new THREE.DirectionalLight(0xffe8c9, 2.0);
+  scene.add(new THREE.HemisphereLight(0xdce2df, 0x38332c, 1.15));
+  const sun = new THREE.DirectionalLight(0xffe8c9, 1.8);
   sun.position.set(-7, 12, 8);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
@@ -35,6 +35,16 @@ try {
   sun.shadow.camera.top = 16;
   sun.shadow.camera.bottom = -16;
   scene.add(sun);
+
+  // Exterior ground gives the entrance a visible approach.
+  const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(80, 80),
+    new THREE.MeshStandardMaterial({ color: 0x454a43, roughness: 1 })
+  );
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = -.24;
+  ground.receiveShadow = true;
+  scene.add(ground);
 
   const home = buildHome(THREE);
   scene.add(home);
@@ -73,9 +83,10 @@ try {
       velocity.z = THREE.MathUtils.damp(velocity.z, direction.z * speed, 12, delta);
       controls.moveRight(velocity.x * delta);
       controls.moveForward(-velocity.z * delta);
-      // Keep the player inside the first house block until room collision is added.
-      camera.position.x = THREE.MathUtils.clamp(camera.position.x, -5.45, 5.45);
-      camera.position.z = THREE.MathUtils.clamp(camera.position.z, -4.45, 4.45);
+
+      // Keep the player within the house footprint and its entrance apron.
+      camera.position.x = THREE.MathUtils.clamp(camera.position.x, -5.55, 5.55);
+      camera.position.z = THREE.MathUtils.clamp(camera.position.z, -4.55, 7.8);
       camera.position.y = 1.68;
     }
     renderer.render(scene, camera);
@@ -86,7 +97,7 @@ try {
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(innerWidth, innerHeight);
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));
   });
 } catch (error) {
   loading.classList.add('hidden');
