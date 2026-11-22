@@ -35,10 +35,10 @@
       <h1>THE HOUSE</h1>
       <p>Осмотрись в доме и исследуй комнаты. Пока здесь только ты.</p>
       <button id="start-button">ВОЙТИ В ДОМ</button>
-      <small>Для управления используй клавиатуру и мышь.</small>
+      <small class="desktop-instructions">WASD — движение · Мышь — обзор · ESC — меню</small><small class="mobile-instructions">Левый стик — движение · Проводи пальцем справа — обзор</small>
     </div>
   </div>
-  <div id="error" class="error hidden"></div>
+  <div id="touch-controls" class="touch-controls disabled" aria-hidden="true">\n    <div id="joystick" class="joystick"><div id="joystick-knob" class="joystick-knob"></div></div>\n    <div id="look-hint" class="look-hint hidden">ПРОВЕДИ ПАЛЬЦЕМ, ЧТОБЫ ОСМОТРЕТЬСЯ</div>\n  </div>\n  <div id="error" class="error hidden"></div>
   <script type="module" src="./src/main.js"></script>
 </body>
 </html>
