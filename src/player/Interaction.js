@@ -1,4 +1,4 @@
-export function createInteractionSystem({ THREE, camera, roots, collisionWorld }) {
+export function createInteractionSystem({ THREE, camera, roots, collisionWorld, audio }) {
   const raycaster = new THREE.Raycaster();
   raycaster.far = 3.2;
   const center = new THREE.Vector2(0, 0);
@@ -56,6 +56,7 @@ export function createInteractionSystem({ THREE, camera, roots, collisionWorld }
       target.userData.isOpen = !target.userData.isOpen;
       target.userData.targetAngle = target.userData.isOpen ? Math.PI / 2 : 0;
       collisionWorld?.setDoorClosed(!target.userData.isOpen);
+      audio?.playDoor(target.userData.isOpen, { x: -0.56, y: 1.05, z: 4.88 });
       setPrompt(target);
       return true;
     }
@@ -63,6 +64,7 @@ export function createInteractionSystem({ THREE, camera, roots, collisionWorld }
     if (meta.type === 'light-switch') {
       meta.toggle();
       const state = meta.getState();
+      audio?.playSwitch(state, { x: 0.86, y: 1.22, z: 4.91 });
       if (meta.rocker) meta.rocker.rotation.x = state ? -0.18 : 0.18;
       setPrompt(target);
       return true;
@@ -70,6 +72,7 @@ export function createInteractionSystem({ THREE, camera, roots, collisionWorld }
 
     if (meta.type === 'inspect') {
       panelOpen = true;
+      audio?.playInspect({ x: target.position.x, y: target.position.y, z: target.position.z });
       if (inspectTitle) inspectTitle.textContent = meta.title || meta.label || 'Осмотр';
       if (inspectBody) inspectBody.textContent = meta.description || 'Здесь нет ничего необычного.';
       inspectPanel?.classList.remove('hidden');
