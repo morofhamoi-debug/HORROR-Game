@@ -22,6 +22,8 @@ try {
 
   const camera = new THREE.PerspectiveCamera(72, innerWidth / innerHeight, 0.1, 120);
   camera.position.set(0, 1.68, 7.1);
+  // The camera is part of the scene so camera-mounted lights (flashlight) render correctly.
+  scene.add(camera);
 
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -79,7 +81,12 @@ try {
       case 'KeyS': case 'ArrowDown': keys.backward = pressed; break;
       case 'KeyA': case 'ArrowLeft': keys.left = pressed; break;
       case 'KeyD': case 'ArrowRight': keys.right = pressed; break;
-      case 'KeyE': if (pressed && !event.repeat) interaction.interact(); break;
+      case 'KeyE':
+        if (pressed && !event.repeat) {
+          if (interaction.isInspecting()) interaction.closeInspection();
+          else interaction.interact();
+        }
+        break;
       case 'KeyF': if (pressed && !event.repeat) flashlight.toggle(); break;
       case 'Escape': if (pressed) interaction.closeInspection(); break;
     }
