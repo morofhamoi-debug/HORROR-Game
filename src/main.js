@@ -113,7 +113,7 @@ try {
   });
 } catch (error) {
   loading.classList.add('hidden');
-  errorBox.textContent = 'Не удалось запустить сцену. Проверь подключение к интернету и поддержку WebGL.\\n' + error.message;
+  errorBox.textContent = 'Не удалось запустить сцену. Проверь подключение к интернету и поддержку WebGL.\n' + error.message;
   errorBox.classList.remove('hidden');
   console.error(error);
 }
