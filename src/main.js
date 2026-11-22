@@ -5,6 +5,8 @@ import { buildHome } from './home/Home.js';
 import { buildHomeLighting } from './home/Lighting.js';
 import { createCollisionWorld } from './player/Collision.js';
 import { createTouchControls } from './player/TouchControls.js';
+import { createInteractionSystem } from './player/Interaction.js';
+import { createFlashlight } from './player/Flashlight.js';
 
 const loading = document.querySelector('#loading');
 const startScreen = document.querySelector('#start-screen');
@@ -59,6 +61,13 @@ try {
   const controls = new PointerLockControls(camera, renderer.domElement);
   const collisionWorld = createCollisionWorld();
   const touchControls = createTouchControls({ renderer, camera, enabled: isTouchDevice });
+  const interaction = createInteractionSystem({
+    THREE,
+    camera,
+    roots: home.userData.interactables || [],
+    collisionWorld
+  });
+  const flashlight = createFlashlight(THREE, camera);
   const keys = { forward: false, backward: false, left: false, right: false };
   const velocity = new THREE.Vector2();
   const clock = new THREE.Clock();
@@ -70,6 +79,9 @@ try {
       case 'KeyS': case 'ArrowDown': keys.backward = pressed; break;
       case 'KeyA': case 'ArrowLeft': keys.left = pressed; break;
       case 'KeyD': case 'ArrowRight': keys.right = pressed; break;
+      case 'KeyE': if (pressed && !event.repeat) interaction.interact(); break;
+      case 'KeyF': if (pressed && !event.repeat) flashlight.toggle(); break;
+      case 'Escape': if (pressed) interaction.closeInspection(); break;
     }
   }
 
@@ -130,6 +142,7 @@ try {
       velocity.set(0, 0);
     }
 
+    interaction.update(delta);
     renderer.render(scene, camera);
   }
   animate();
