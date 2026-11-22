@@ -9,6 +9,8 @@ import { buildKitchen } from '../rooms/Kitchen.js';
 import { buildBedroom } from '../rooms/Bedroom.js';
 import { buildBathroom } from '../rooms/Bathroom.js';
 import { buildCorridor } from '../rooms/Corridor.js';
+import { buildWallSwitch } from './WallSwitch.js';
+import { buildInspectables } from './Inspectables.js';
 
 export function buildHome(THREE) {
   const home = new THREE.Group();
@@ -19,7 +21,7 @@ export function buildHome(THREE) {
   buildWalls(THREE, home, m);
   buildCeiling(THREE, home, m);
   buildWindows(THREE, home, m);
-  buildDoors(THREE, home, m);
+  const entryDoor = buildDoors(THREE, home, m);
 
   // Each room is an independent module to keep the project expandable.
   buildLivingRoom(THREE, home, m);
@@ -27,6 +29,10 @@ export function buildHome(THREE) {
   buildBedroom(THREE, home, m);
   buildBathroom(THREE, home, m);
   buildCorridor(THREE, home, m);
+
+  const lightSwitch = buildWallSwitch(THREE, home, m, home.userData.ceilingFixtures);
+  const photograph = buildInspectables(THREE, home, m);
+  home.userData.interactables = [entryDoor, lightSwitch, photograph];
 
   return home;
 }
