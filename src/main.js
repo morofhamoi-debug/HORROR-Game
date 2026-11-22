@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { buildHome } from './home/Home.js';
+import { buildHomeLighting } from './home/Lighting.js';
 
 const loading = document.querySelector('#loading');
 const startScreen = document.querySelector('#start-screen');
@@ -10,31 +12,34 @@ const errorBox = document.querySelector('#error');
 try {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x777e79);
-  scene.fog = new THREE.Fog(0x777e79, 22, 62);
+  scene.fog = new THREE.Fog(0x777e79, 24, 68);
 
   const camera = new THREE.PerspectiveCamera(72, innerWidth / innerHeight, 0.1, 120);
   camera.position.set(0, 1.68, 7.1);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));
+  const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    powerPreference: 'high-performance',
+    alpha: false
+  });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
   renderer.setSize(innerWidth, innerHeight);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.12;
+  renderer.toneMappingExposure = 1.0;
+  renderer.info.autoReset = true;
   document.body.appendChild(renderer.domElement);
 
-  scene.add(new THREE.HemisphereLight(0xdce2df, 0x38332c, 1.15));
-  const sun = new THREE.DirectionalLight(0xffe8c9, 1.8);
-  sun.position.set(-7, 12, 8);
-  sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
-  sun.shadow.camera.left = -16;
-  sun.shadow.camera.right = 16;
-  sun.shadow.camera.top = 16;
-  sun.shadow.camera.bottom = -16;
-  scene.add(sun);
+  // A neutral indoor environment gives wood, glass and metal believable reflections.
+  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+  const environment = new RoomEnvironment();
+  scene.environment = pmremGenerator.fromScene(environment, 0.04).texture;
+  pmremGenerator.dispose();
+
+  // Lighting is separated from geometry so it can be tuned without rebuilding rooms.
+  buildHomeLighting(THREE, scene);
 
   // Exterior ground gives the entrance a visible approach.
   const ground = new THREE.Mesh(
@@ -70,13 +75,20 @@ try {
   controls.addEventListener('unlock', () => startScreen.classList.remove('hidden'));
 
   loading.classList.add('hidden');
-  setTimeout(() => { loading.style.display = 'none'; startScreen.classList.remove('hidden'); }, 450);
+  setTimeout(() => {
+    loading.style.display = 'none';
+    startScreen.classList.remove('hidden');
+  }, 450);
 
   function animate() {
     requestAnimationFrame(animate);
     const delta = Math.min(clock.getDelta(), 0.05);
     if (controls.isLocked) {
-      direction.set(Number(keys.right) - Number(keys.left), 0, Number(keys.backward) - Number(keys.forward));
+      direction.set(
+        Number(keys.right) - Number(keys.left),
+        0,
+        Number(keys.backward) - Number(keys.forward)
+      );
       if (direction.lengthSq() > 0) direction.normalize();
       const speed = 3.0;
       velocity.x = THREE.MathUtils.damp(velocity.x, direction.x * speed, 12, delta);
@@ -84,7 +96,7 @@ try {
       controls.moveRight(velocity.x * delta);
       controls.moveForward(-velocity.z * delta);
 
-      // Keep the player within the house footprint and its entrance apron.
+      // Temporary outer bounds; room-by-room wall collision is a later gameplay task.
       camera.position.x = THREE.MathUtils.clamp(camera.position.x, -5.55, 5.55);
       camera.position.z = THREE.MathUtils.clamp(camera.position.z, -4.55, 7.8);
       camera.position.y = 1.68;
@@ -97,11 +109,11 @@ try {
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(innerWidth, innerHeight);
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
   });
 } catch (error) {
   loading.classList.add('hidden');
-  errorBox.textContent = 'Не удалось запустить сцену. Проверь подключение к интернету и поддержку WebGL.\n' + error.message;
+  errorBox.textContent = 'Не удалось запустить сцену. Проверь подключение к интернету и поддержку WebGL.\\n' + error.message;
   errorBox.classList.remove('hidden');
   console.error(error);
 }
