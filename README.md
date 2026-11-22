@@ -1,25 +1,22 @@
 # HORROR-Game
 
-A modular first-person horror-house prototype built with Three.js.
+Модульный first-person horror-house prototype на Three.js.
 
-## Run
-Open the repository through a static web server or enable GitHub Pages. The project uses ES modules and an import map, so it should not be opened as a local `file://` page.
+## Запуск
+Откройте проект через статический web-сервер или GitHub Pages. Проект использует ES modules и import map; открытие напрямую через `file://` не поддерживается.
 
-## Current prototype
-- Modular house shell, floor and ceiling.
-- Separate room modules: living room, kitchen, bedroom and bathroom.
-- First-person mouse look and WASD movement.
-- Basic interior lighting, fog and soft shadows.
+## Текущая сборка
+- Домашняя архитектура: пол, стены, потолок, оконные и дверные проёмы.
+- Отдельные модули комнат: гостиная, кухня, спальня, ванная и коридор.
+- Детализированная базовая мебель и бытовые предметы в каждой комнате.
+- Процедурные текстуры поверхностей: дерево, штукатурка, ткань, плитка и камень.
+- First-person управление мышью и WASD.
+- Базовое внутреннее освещение, туман и мягкие тени.
 
-## Controls
-- WASD / arrow keys — move
-- Mouse — look around
-- ESC — release mouse and return to the start screen
+## Управление
+- WASD / стрелки — движение.
+- Мышь — осмотр.
+- ESC — освободить мышь и вернуться к стартовому экрану.
 
-## Next development steps
-1. Add proper door and window openings with collision-aware navigation.
-2. Improve architectural proportions, materials and furniture models.
-3. Add footsteps, interaction prompts and environmental audio.
-4. Build the horror narrative and gameplay systems after the house blockout is approved.
-
-The current geometry is an early blockout, not a final photorealistic environment.
+## Статус и ограничения
+Проект находится на стадии разработки окружения. Текущая геометрия и процедурные материалы — рабочая основа, а не финальная photorealistic-графика. Следующие задачи: проверка масштаба и проходов, улучшение PBR-материалов и освещения, полноценные коллизии, взаимодействия и звуковая система. Хоррор-сюжет и противники добавляются после утверждения дома.
