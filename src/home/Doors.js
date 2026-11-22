@@ -13,9 +13,9 @@ export function buildDoors(THREE, group, m) {
   const handle = new THREE.Mesh(new THREE.SphereGeometry(.055, 12, 10), m.trim);
   handle.position.set(.92, 1.02, -.13);
   hinge.add(handle);
-  hinge.rotation.y = -.95;
+  hinge.rotation.y = Math.PI / 2;
   hinge.userData.isOpen = true;
-  hinge.userData.targetAngle = -.95;
+  hinge.userData.targetAngle = Math.PI / 2;
   hinge.userData.interaction = {
     type: 'door',
     label: 'Дверь',
