@@ -1,5 +1,3 @@
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-
 export function buildHomeLighting(THREE, scene) {
   // Cool daylight gently enters through the windows.
   const windowLights = [
