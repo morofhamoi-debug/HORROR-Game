@@ -108,7 +108,9 @@ try {
     }
   });
   controls.addEventListener('lock', () => startScreen.classList.add('hidden'));
-  controls.addEventListener('unlock', () => startScreen.classList.remove('hidden'));
+  controls.addEventListener('unlock', () => {
+    if (!interaction.isInspecting()) startScreen.classList.remove('hidden');
+  });
 
   loading.classList.add('hidden');
   setTimeout(() => {
