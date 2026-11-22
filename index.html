@@ -38,9 +38,20 @@
       <small class="desktop-instructions">WASD — движение · Мышь — обзор · ESC — меню</small><small class="mobile-instructions">Левый стик — движение · Проводи пальцем справа — обзор</small>
     </div>
   </div>
-  <div id="touch-controls" class="touch-controls disabled" aria-hidden="true">
+  <div id="interaction-prompt" class="interaction-prompt hidden"><span id="interaction-text"></span><kbd>E</kbd></div>
+  <div id="touch-controls" class="touch-controls disabled">
     <div id="joystick" class="joystick"><div id="joystick-knob" class="joystick-knob"></div></div>
     <div id="look-hint" class="look-hint hidden">ПРОВЕДИ ПАЛЬЦЕМ, ЧТОБЫ ОСМОТРЕТЬСЯ</div>
+    <button id="interact-button" class="action-button hidden" type="button">ВЗАИМОДЕЙСТВОВАТЬ</button>
+    <button id="flashlight-button" class="action-button" type="button" aria-pressed="false">ФОНАРИК</button>
+  </div>
+  <div id="inspect-panel" class="inspect-panel hidden" role="dialog" aria-modal="true" aria-labelledby="inspect-title">
+    <div class="inspect-card">
+      <div class="inspect-eyebrow">ОСМОТР ОБЪЕКТА</div>
+      <h2 id="inspect-title">Осмотр</h2>
+      <p id="inspect-body"></p>
+      <button id="inspect-close" type="button">ЗАКРЫТЬ</button>
+    </div>
   </div>
   <div id="error" class="error hidden"></div>
   <script type="module" src="./src/main.js"></script>
