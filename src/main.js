@@ -7,6 +7,7 @@ import { createCollisionWorld } from './player/Collision.js';
 import { createTouchControls } from './player/TouchControls.js';
 import { createInteractionSystem } from './player/Interaction.js';
 import { createFlashlight } from './player/Flashlight.js';
+import { createAudioManager } from './audio/AudioManager.js';
 
 const loading = document.querySelector('#loading');
 const startScreen = document.querySelector('#start-screen');
@@ -60,6 +61,7 @@ try {
   const home = buildHome(THREE);
   scene.add(home);
 
+  const audio = createAudioManager();
   const controls = new PointerLockControls(camera, renderer.domElement);
   const collisionWorld = createCollisionWorld();
   const touchControls = createTouchControls({ renderer, camera, enabled: isTouchDevice });
@@ -67,13 +69,24 @@ try {
     THREE,
     camera,
     roots: home.userData.interactables || [],
-    collisionWorld
+    collisionWorld,
+    audio
   });
-  const flashlight = createFlashlight(THREE, camera);
+  const flashlight = createFlashlight(THREE, camera, audio);
   const keys = { forward: false, backward: false, left: false, right: false };
   const velocity = new THREE.Vector2();
   const clock = new THREE.Clock();
   let touchStarted = false;
+  let footstepDistance = 0;
+
+  function getFootstepSurface(x, z) {
+    if (z > 5.1) return 'stone';
+    if (x < -4.45 && z > 1.0) return 'tile'; // bathroom tile
+    if (x > 2.05 && z < 0.8) return 'tile'; // kitchen tile
+    if (x > 1.75 && z > 1.15) return 'carpet'; // bedroom rug and soft floor
+    if (x < -2.15 && z < -1.25) return 'carpet'; // living-room rug
+    return 'wood';
+  }
 
   function keyChange(event, pressed) {
     switch (event.code) {
@@ -100,6 +113,7 @@ try {
   });
 
   startButton.addEventListener('click', () => {
+    audio.start();
     if (isTouchDevice) {
       touchStarted = true;
       startScreen.classList.add('hidden');
@@ -145,13 +159,28 @@ try {
       const deltaX = (cosine * velocity.x - sine * velocity.y) * delta;
       const deltaZ = (-sine * velocity.x - cosine * velocity.y) * delta;
 
+      const previousX = camera.position.x;
+      const previousZ = camera.position.z;
       collisionWorld.move(camera.position, deltaX, deltaZ);
       camera.position.y = 1.68;
+
+      const travelled = Math.hypot(camera.position.x - previousX, camera.position.z - previousZ);
+      if (travelled > 0.0005) {
+        footstepDistance += travelled;
+        const surface = getFootstepSurface(camera.position.x, camera.position.z);
+        const stepLength = surface === 'carpet' ? 0.92 : 0.82;
+        if (footstepDistance >= stepLength) {
+          footstepDistance %= stepLength;
+          const movementIntensity = THREE.MathUtils.clamp(Math.hypot(velocity.x, velocity.y) / speed, .45, 1);
+          audio.playFootstep(surface, { x: camera.position.x, y: 0.05, z: camera.position.z }, movementIntensity);
+        }
+      }
     } else {
       velocity.set(0, 0);
     }
 
     interaction.update(delta);
+    audio.update(delta, camera);
     renderer.render(scene, camera);
   }
   animate();
