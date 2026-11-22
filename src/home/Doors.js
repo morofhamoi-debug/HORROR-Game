@@ -14,6 +14,13 @@ export function buildDoors(THREE, group, m) {
   handle.position.set(.92, 1.02, -.13);
   hinge.add(handle);
   hinge.rotation.y = -.95;
+  hinge.userData.isOpen = true;
+  hinge.userData.targetAngle = -.95;
+  hinge.userData.interaction = {
+    type: 'door',
+    label: 'Дверь',
+    description: 'Входная дверь частного дома'
+  };
   group.add(hinge);
   return hinge;
 }
