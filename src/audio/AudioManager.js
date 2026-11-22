@@ -47,8 +47,8 @@ export function createAudioManager() {
     let last = 0;
     for (let i = 0; i < data.length; i++) {
       const white = Math.random() * 2 - 1;
-      last = last * 0.985 + white * 0.015;
-      data[i] = clamp(last * 3.2, -1, 1);
+      last = last * 0.92 + white * 0.08;
+      data[i] = clamp(white * 0.48 + last * 0.9, -1, 1);
     }
     return true;
   }
@@ -76,7 +76,7 @@ export function createAudioManager() {
     panner.refDistance = 1.1;
     panner.maxDistance = 18;
     panner.rolloffFactor = 1.15;
-    if (panner.positionX) {
+    if (panner.positionX && panner.positionY && panner.positionZ) {
       panner.positionX.value = position.x;
       panner.positionY.value = position.y ?? 0.2;
       panner.positionZ.value = position.z;
@@ -194,7 +194,10 @@ export function createAudioManager() {
 
   function setMuted(value) {
     muted = Boolean(value);
-    if (master && context) setParam(master.gain, muted ? 0 : 0.72, 0.12);
+    if (master && context) {
+      setParam(master.gain, muted ? 0 : 0.72, 0.12);
+      if (!muted && context.state === 'suspended') context.resume().catch(() => {});
+    }
     if (button) {
       button.textContent = muted ? 'ЗВУК: ВЫКЛ' : 'ЗВУК: ВКЛ';
       button.classList.toggle('active', muted);
@@ -297,7 +300,7 @@ export function createAudioManager() {
     const listener = context.listener;
     const position = camera.position;
     const direction = camera.getWorldDirection(directionTarget);
-    if (listener.positionX) {
+    if (listener.positionX && listener.forwardX && listener.upX) {
       listener.positionX.value = position.x;
       listener.positionY.value = position.y;
       listener.positionZ.value = position.z;
