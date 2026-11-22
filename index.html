@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#101211" />
+  <title>HORROR-Game</title>
+  <link rel="stylesheet" href="./src/style.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="loading" class="overlay">
+    <div class="loading-panel">
+      <div class="eyebrow">A FIRST-PERSON HORROR EXPERIENCE</div>
+      <h1>HORROR<span>GAME</span></h1>
+      <div class="loading-track"><i></i></div>
+      <p>Подготавливаем дом…</p>
+    </div>
+  </div>
+  <div id="crosshair" aria-hidden="true"></div>
+  <div id="hud">
+    <div class="hud-title">THE HOUSE <span>— PROTOTYPE 01</span></div>
+    <div class="hud-help">W A S D — движение <b>•</b> МЫШЬ — обзор <b>•</b> ESC — меню</div>
+  </div>
+  <div id="start-screen" class="overlay hidden">
+    <div class="start-panel">
+      <div class="eyebrow">НАЙДИ СВОЙ ПУТЬ</div>
+      <h1>THE HOUSE</h1>
+      <p>Дом пока пуст. Исследуй пространство и осмотрись.</p>
+      <button id="start-button">ВОЙТИ В ДОМ</button>
+      <small>Для управления используй клавиатуру и мышь.</small>
+    </div>
+  </div>
+  <div id="error" class="error hidden"></div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
