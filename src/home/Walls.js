@@ -22,15 +22,15 @@ export function buildWalls(THREE, group, m) {
   wall([5.44,H,T],[3.28,H/2,5]);
   wall([1.12,.78,T],[0,2.51,5]);
 
-  // Left wall window opening centered at z=-1.
+  // Left wall: one window centered at z=-1.
   wall([T,H,3.41],[-6,H/2,-3.295]);
-  wall([T,H,3.41],[-6,H/2,3.295]);
+  wall([T,H,5.41],[-6,H/2,2.295]);
   wall([T,1.22,1.18],[-6,.61,-1]);
   wall([T,.56,1.18],[-6,2.62,-1]);
 
-  // Right wall window opening centered at z=1.4.
-  wall([T,H,4.41],[6,H/2,-2.795]);
-  wall([T,H,3.41],[6,H/2,3.295]);
+  // Right wall: one window centered at z=1.4.
+  wall([T,H,5.81],[6,H/2,-2.095]);
+  wall([T,H,3.01],[6,H/2,3.495]);
   wall([T,1.22,1.18],[6,.61,1.4]);
   wall([T,.56,1.18],[6,2.62,1.4]);
 
