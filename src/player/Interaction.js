@@ -54,7 +54,7 @@ export function createInteractionSystem({ THREE, camera, roots, collisionWorld }
 
     if (meta.type === 'door') {
       target.userData.isOpen = !target.userData.isOpen;
-      target.userData.targetAngle = target.userData.isOpen ? -0.95 : 0;
+      target.userData.targetAngle = target.userData.isOpen ? Math.PI / 2 : 0;
       collisionWorld?.setDoorClosed(!target.userData.isOpen);
       setPrompt(target);
       return true;
