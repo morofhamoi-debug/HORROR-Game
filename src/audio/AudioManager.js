@@ -17,7 +17,12 @@ export function createAudioManager() {
     if (!AudioContextClass) return false;
     if (context) return true;
 
-    context = new AudioContextClass();
+    try {
+      context = new AudioContextClass();
+    } catch (error) {
+      console.warn('AudioContext is unavailable:', error);
+      return false;
+    }
     master = context.createGain();
     master.gain.value = muted ? 0 : 0.72;
     effects = context.createGain();
@@ -98,7 +103,13 @@ export function createAudioManager() {
     envelope.gain.exponentialRampToValueAtTime(0.0001, now + duration);
     source.connect(filter);
     filter.connect(envelope);
-    connectSpatial(envelope, position, destination);
+    const panner = connectSpatial(envelope, position, destination);
+    source.onended = () => {
+      source.disconnect();
+      filter.disconnect();
+      envelope.disconnect();
+      panner?.disconnect();
+    };
     source.start(now);
     source.stop(now + duration + 0.025);
   }
@@ -115,7 +126,12 @@ export function createAudioManager() {
     envelope.gain.linearRampToValueAtTime(gain, now + 0.008);
     envelope.gain.exponentialRampToValueAtTime(0.0001, now + duration);
     oscillator.connect(envelope);
-    connectSpatial(envelope, position, destination);
+    const panner = connectSpatial(envelope, position, destination);
+    oscillator.onended = () => {
+      oscillator.disconnect();
+      envelope.disconnect();
+      panner?.disconnect();
+    };
     oscillator.start(now);
     oscillator.stop(now + duration + 0.025);
   }
@@ -276,11 +292,11 @@ export function createAudioManager() {
     });
   }
 
-  function update(delta, camera) {
+  function update(delta, camera, directionTarget) {
     if (!started || !context) return;
     const listener = context.listener;
     const position = camera.position;
-    const direction = camera.getWorldDirection();
+    const direction = camera.getWorldDirection(directionTarget);
     if (listener.positionX) {
       listener.positionX.value = position.x;
       listener.positionY.value = position.y;
