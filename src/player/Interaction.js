@@ -86,7 +86,7 @@ export function createInteractionSystem({ THREE, camera, roots, collisionWorld }
   function update(delta) {
     for (const root of roots) {
       if (root.userData?.interaction?.type === 'door') {
-        const targetAngle = root.userData.targetAngle ?? -0.95;
+        const targetAngle = root.userData.targetAngle ?? Math.PI / 2;
         root.rotation.y = THREE.MathUtils.damp(root.rotation.y, targetAngle, 9, delta);
       }
     }
@@ -104,6 +104,7 @@ export function createInteractionSystem({ THREE, camera, roots, collisionWorld }
     update,
     interact,
     closeInspection,
-    getFocused: () => focused
+    getFocused: () => focused,
+    isInspecting: () => panelOpen
   };
 }
