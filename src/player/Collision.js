@@ -56,10 +56,14 @@ function circleHitsRect(x, z, rect, radius) {
 }
 
 export function createCollisionWorld() {
+  let doorClosed = false;
+  const closedDoorRect = { minX: -0.56, maxX: 0.56, minZ: 4.82, maxZ: 4.94 };
+
   function isBlocked(x, z) {
     // Keep exploration on the entrance apron and inside the exterior footprint.
     if (x < -6.45 || x > 6.45 || z < -5.45 || z > 8.25) return true;
-    return SOLID_RECTS.some(rect => circleHitsRect(x, z, rect, PLAYER_RADIUS));
+    const hitsStatic = SOLID_RECTS.some(rect => circleHitsRect(x, z, rect, PLAYER_RADIUS));
+    return hitsStatic || (doorClosed && circleHitsRect(x, z, closedDoorRect, PLAYER_RADIUS));
   }
 
   function move(position, deltaX, deltaZ) {
@@ -74,5 +78,7 @@ export function createCollisionWorld() {
     return position;
   }
 
-  return { move, isBlocked, playerRadius: PLAYER_RADIUS };
+  function setDoorClosed(value) { doorClosed = Boolean(value); }
+
+  return { move, isBlocked, setDoorClosed, playerRadius: PLAYER_RADIUS };
 }
