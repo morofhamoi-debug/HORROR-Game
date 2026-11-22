@@ -27,7 +27,9 @@ export function createInteractionSystem({ THREE, camera, roots, collisionWorld }
     const meta = target?.userData?.interaction;
     const label = meta?.type === 'door'
       ? (target.userData.isOpen ? 'Закрыть дверь' : 'Открыть дверь')
-      : meta?.label || 'Взаимодействовать';
+      : meta?.type === 'light-switch'
+        ? (meta.getState() ? 'Выключить свет' : 'Включить свет')
+        : meta?.label || 'Взаимодействовать';
 
     if (promptText) promptText.textContent = label;
     prompt?.classList.toggle('hidden', !target || panelOpen);
@@ -63,7 +65,6 @@ export function createInteractionSystem({ THREE, camera, roots, collisionWorld }
       const state = meta.getState();
       if (meta.rocker) meta.rocker.rotation.x = state ? -0.18 : 0.18;
       setPrompt(target);
-      if (promptText) promptText.textContent = state ? 'Выключить свет' : 'Включить свет';
       return true;
     }
 
