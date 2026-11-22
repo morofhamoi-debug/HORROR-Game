@@ -48,3 +48,9 @@
 
 .inspect-footer{margin-top:18px;color:#7f897b;font-size:9px;letter-spacing:.12em}
 @media (pointer:coarse),(max-width:700px){.inspect-footer{display:none}}
+
+/* Master audio control */
+.sound-toggle{position:fixed;z-index:4;top:58px;right:26px;padding:9px 11px;border:1px solid rgba(225,232,218,.28);border-radius:3px;background:rgba(12,16,13,.64);color:#c6cec0;font-size:9px;letter-spacing:.12em;backdrop-filter:blur(8px);cursor:pointer;pointer-events:auto}
+.sound-toggle.active{color:#aab39f;border-color:rgba(170,190,155,.55)}
+.sound-toggle:disabled{opacity:.55;cursor:default}
+@media (pointer:coarse),(max-width:700px){.sound-toggle{top:48px;right:16px;padding:9px 10px;font-size:8px}}
