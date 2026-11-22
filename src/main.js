@@ -76,6 +76,7 @@ try {
   const keys = { forward: false, backward: false, left: false, right: false };
   const velocity = new THREE.Vector2();
   const clock = new THREE.Clock();
+  const audioDirection = new THREE.Vector3();
   let touchStarted = false;
   let footstepDistance = 0;
 
@@ -180,7 +181,7 @@ try {
     }
 
     interaction.update(delta);
-    audio.update(delta, camera);
+    audio.update(delta, camera, audioDirection);
     renderer.render(scene, camera);
   }
   animate();
