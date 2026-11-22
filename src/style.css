@@ -45,3 +45,6 @@
   #flashlight-button{bottom:18px}
   .inspect-card{padding:24px}
 }
+
+.inspect-footer{margin-top:18px;color:#7f897b;font-size:9px;letter-spacing:.12em}
+@media (pointer:coarse),(max-width:700px){.inspect-footer{display:none}}
