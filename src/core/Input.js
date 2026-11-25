@@ -10,6 +10,7 @@ export class Input {
     this.onInteract = null;
     this.onPause = null;
     this.onMobileMenu = null;
+    this.onPhoneToggle = null;
     this.joystickPointer = null;
     this.lookPointer = null;
     this.lookLast = { x: 0, y: 0 };
@@ -26,6 +27,7 @@ export class Input {
     this.listen(window, 'keydown', event => {
       this.keys.add(event.code);
       if (event.code === 'KeyE' && !event.repeat && this.enabled) this.onInteract?.();
+      if (event.code === 'KeyP' && !event.repeat && this.enabled) this.onPhoneToggle?.();
       if (event.code === 'Escape' && this.enabled) this.onPause?.();
     });
 
@@ -46,6 +48,12 @@ export class Input {
 
     this.listen(document.getElementById('mobile-menu'), 'click', () => {
       if (this.enabled) this.onMobileMenu?.();
+    });
+
+    this.listen(document.getElementById('phone-toggle'), 'click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (this.enabled) this.onPhoneToggle?.();
     });
 
     const joystick = document.getElementById('joystick');

@@ -4,6 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check src/main.js && node --check src/core/Game.js && node --check src/core/Input.js && node --check src/core/Player.js && node --check src/world/House.js && node --check src/world/Architecture.js && node --check src/world/Stairs.js && node --check src/world/Layout.js && node --check src/world/RoomZones.js && node --check src/world/GeometryAudit.js && node --check src/world/DebugTools.js && node --check src/world/Materials.js && node --check src/world/Furniture.js && node --check src/world/Decor.js && node --check src/world/Lighting.js && node --check src/ui/HUD.js && node --test tests/*.test.js"
+    "check": "node --check src/main.js && node --check src/core/Game.js && node --check src/player/Hands.js && node --check src/player/Phone.js && node --check src/core/Input.js && node --check src/core/Player.js && node --check src/world/House.js && node --check src/world/Architecture.js && node --check src/world/Stairs.js && node --check src/world/Layout.js && node --check src/world/RoomZones.js && node --check src/world/GeometryAudit.js && node --check src/world/DebugTools.js && node --check src/world/Materials.js && node --check src/world/Furniture.js && node --check src/world/Decor.js && node --check src/world/Lighting.js && node --check src/ui/HUD.js && node --test tests/*.test.js"
   }
 }

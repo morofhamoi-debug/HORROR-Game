@@ -3,3 +3,69 @@
 .mobile-controls{position:absolute;inset:0;z-index:6}.mobile-controls #look-zone{z-index:1}.mobile-controls .joystick,.mobile-controls .mobile-action,.mobile-controls .mobile-menu{z-index:3}
 
 .location em{display:block;margin-top:4px;font:8px 'DM Mono',monospace;font-style:normal;letter-spacing:.12em;color:rgba(231,225,211,.34)}
+
+
+/* In-world first-person phone control */
+.phone-toggle{
+  position:absolute;
+  right:clamp(18px,3vw,46px);
+  bottom:88px;
+  z-index:8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  min-width:122px;
+  height:46px;
+  padding:0 14px;
+  border:1px solid rgba(214,194,153,.35);
+  border-radius:3px;
+  color:rgba(237,229,211,.92);
+  background:linear-gradient(145deg,rgba(26,29,32,.84),rgba(7,9,11,.76));
+  box-shadow:0 8px 28px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.07);
+  backdrop-filter:blur(15px);
+  -webkit-backdrop-filter:blur(15px);
+  cursor:pointer;
+  pointer-events:auto;
+  transition:background .2s,border-color .2s,transform .2s,box-shadow .2s;
+}
+.phone-toggle svg{
+  display:block;
+  width:18px;
+  height:18px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.45;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  flex:none;
+}
+.phone-toggle span{
+  font:9px 'DM Mono',monospace;
+  letter-spacing:.16em;
+  white-space:nowrap;
+}
+.phone-toggle:active{transform:translateY(1px) scale(.97)}
+.phone-toggle.active{
+  color:#e8d6ad;
+  border-color:rgba(210,180,123,.78);
+  background:linear-gradient(145deg,rgba(103,82,48,.76),rgba(14,15,14,.88));
+  box-shadow:0 0 24px rgba(189,151,90,.16),inset 0 1px rgba(255,255,255,.12);
+}
+.phone-toggle:focus-visible{outline:2px solid rgba(220,192,139,.8);outline-offset:3px}
+@media(hover:none),(max-width:800px){
+  .phone-toggle{
+    right:24px;
+    bottom:164px;
+    min-width:48px;
+    width:48px;
+    height:48px;
+    padding:0;
+    border-radius:50%;
+  }
+  .phone-toggle svg{width:21px;height:21px}
+  .phone-toggle span{display:none}
+}
+@media(max-height:570px) and (orientation:landscape){
+  .phone-toggle{right:22px;bottom:90px;width:42px;height:42px;min-width:42px}
+}

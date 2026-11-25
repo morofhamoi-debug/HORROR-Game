@@ -6,6 +6,7 @@ export class HUD {
     this.interactionLabel = document.getElementById('interaction-label');
     this.quality = document.getElementById('quality-label');
     this.room = document.getElementById('room-label');
+    this.phoneButton = document.getElementById('phone-toggle');
     this.objective = document.getElementById('objective-text');
     this.clock = document.getElementById('clock');
     this.tickClock();
@@ -20,6 +21,13 @@ export class HUD {
 
   setQuality(value) { this.quality.textContent = value; }
   setObjective(value) { this.objective.textContent = value; }
+  setPhoneOpen(open) {
+    if (!this.phoneButton) return;
+    this.phoneButton.classList.toggle('active', Boolean(open));
+    this.phoneButton.setAttribute('aria-pressed', String(Boolean(open)));
+    this.phoneButton.setAttribute('aria-label', open ? 'Убрать телефон' : 'Достать телефон');
+  }
+
   setRoom(value) {
     if (this.room && this.room.textContent !== value) this.room.textContent = value;
   }

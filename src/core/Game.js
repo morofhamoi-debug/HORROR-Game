@@ -13,6 +13,7 @@ import { HUD } from '../ui/HUD.js';
 import { DebugTools } from '../world/DebugTools.js';
 import { runGeometryAudit } from '../world/GeometryAudit.js';
 import { roomAt } from '../world/RoomZones.js';
+import { FirstPersonHands } from '../player/Hands.js';
 export class Game {
   constructor(elements) {
     this.elements = elements; this.running = false; this.composer = null; this.clock = new THREE.Timer();
@@ -27,6 +28,7 @@ export class Game {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.scene = new THREE.Scene(); this.scene.background = new THREE.Color(0x090b10); this.scene.fog = new THREE.FogExp2(0x11131a, .018);
     this.camera = new THREE.PerspectiveCamera(76, window.innerWidth / window.innerHeight, .08, 140); this.camera.rotation.order = 'YXZ';
+    this.scene.add(this.camera); // The camera is in the scene graph so its 3D viewmodel children are rendered.
     this.input = new Input(elements.canvas); this.hud = new HUD(); this.onResize = () => this.resize();
   }
   isMobile() { return matchMedia('(pointer: coarse)').matches || window.innerWidth < 760; }
@@ -42,10 +44,20 @@ export class Game {
     this.geometryReport = runGeometryAudit(this.scene, this.house.colliders);
     console.info('HOLLOW HOUSE geometry audit', this.geometryReport);
     this.debugTools = new DebugTools(this.scene, this.house.colliders, this.renderer, this.house);
-    this.player = new Player(this.camera, this.input, this.house.colliders); this.player.reset();
+    this.player = new Player(this.camera, this.input, this.house.colliders);
+    this.player.reset();
+    this.hands = new FirstPersonHands(this.camera, {
+      maxAnisotropy: this.renderer.capabilities.getMaxAnisotropy()
+    });
     this.hud.setQuality(this.quality); this.hud.setFloor(0); this.hud.setRoom(roomAt(0, this.player.position.x, this.player.position.z)); this.hud.setInteraction('');
     this.hud.setObjective('Осмотритесь. Изучите дом.');
     this.input.onInteract = () => this.interact();
+    this.input.onPhoneToggle = () => {
+      const open = this.hands.togglePhone();
+      this.hud.setPhoneOpen(open);
+      this.hud.setObjective(open ? 'Вы достали телефон.' : 'Вы убрали телефон.');
+    };
+    this.hud.setPhoneOpen(false);
     this.input.onPause = () => { this.pause(); this.elements.pause.classList.remove('hidden'); };
     this.input.onMobileMenu = () => { this.pause(); this.elements.pause.classList.remove('hidden'); };
     this.elements.canvas.addEventListener('click', () => {
@@ -113,7 +125,15 @@ export class Game {
     this.running = false; this.input.enabled = false;
     if (document.pointerLockElement) document.exitPointerLock?.();
   }
-  restart() { this.player.reset(); this.hud.setFloor(0); this.hud.setObjective('Осмотритесь. Изучите дом.'); this.resume(); }
+  restart() {
+    this.player.reset();
+    if (this.hands?.phoneOpen) this.hands.setPhoneOpen(false);
+    this.hud.setPhoneOpen(false);
+    this.hud.setFloor(0);
+    this.hud.setRoom(roomAt(0, this.player.position.x, this.player.position.z));
+    this.hud.setObjective('Осмотритесь. Изучите дом.');
+    this.resume();
+  }
   interact() {
     const eye = this.camera.position, forward = this.camera.getWorldDirection(this.tmpDirection);
     let best = null, bestDistance = 2.65;
@@ -137,7 +157,14 @@ export class Game {
     requestAnimationFrame(() => this.animate());
     this.clock.update();
     const dt = Math.min(this.clock.getDelta(), .05);
-    this.player.update(dt); this.camera.rotation.y = this.input.yaw; this.camera.rotation.x = this.input.pitch;
+    this.player.update(dt);
+    this.camera.rotation.y = this.input.yaw;
+    this.camera.rotation.x = this.input.pitch;
+    const movement = this.input.getMovement();
+    this.hands?.update(dt, {
+      amount: Math.hypot(movement.x, movement.y),
+      sprint: movement.sprint
+    });
     this.house.update(dt); this.lights.update(dt); this.updateInteractionHint(); this.hud.setFloor(this.player.level);
     this.debugTools?.update(dt, this.player);
     this.hud.setRoom(roomAt(this.player.level, this.player.position.x, this.player.position.z));
@@ -148,6 +175,7 @@ export class Game {
     this.pause();
     window.removeEventListener('resize', this.onResize);
     this.debugTools?.dispose();
+    this.hands?.dispose?.();
     this.input?.dispose?.();
     this.lights?.dispose?.();
     this.house?.dispose?.();

@@ -10,6 +10,7 @@ Open the published game at https://morofhamoi-debug.github.io/HORROR-Game/
 - Mouse — look around
 - Shift — move faster
 - E — interact with doors and light switches
+- P / bottom-right phone icon — raise or lower the 3D smartphone
 - Esc — pause
 - Mobile — left virtual stick to move, drag the right side to look, E to interact
 
@@ -21,6 +22,7 @@ Append ?debug=1 to the game URL to show the diagnostics overlay.
 ## Project layout
 - src/core — game loop, input, character movement
 - src/world — common layout, walls, openings, stairs, furniture, materials, lighting, diagnostics and house assembly
+- src/player — procedural first-person hands, arms and smartphone viewmodel
 - src/ui — HUD and responsive interface
 - tests — automated checks for floor dimensions, stair dimensions and room-zone mapping
 
@@ -37,7 +39,8 @@ The game imports Three.js from jsDelivr via the import map in index.html. It the
 - Procedural PBR-style colour, normal and roughness maps are generated for wood, plaster, concrete, tile and fabric.
 - Desktop post-processing uses GTAO denoising and restrained bloom. The mobile path is lighter.
 - The character controller uses custom collision bounds, step traversal and gravity for larger drops; it is not a full rigid-body capsule physics engine.
+- First-person arms and hands are procedural 3D geometry with tapered phalanges, joint volumes, nails, palm creases and skin maps. The titanium smartphone is a separate 3D viewmodel with a live canvas display.
 
-See docs/house-audit.md for findings, implemented corrections, verification scope and remaining QA work.
+See docs/house-audit.md for architectural findings and docs/first-person-viewmodel.md for the hands and smartphone implementation.
 
 This is an evolving game prototype, not a finished commercial AAA product. Visual quality and frame rate depend on browser and GPU capabilities.
