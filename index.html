@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#080a0d">
+  <meta name="description" content="HOLLOW HOUSE — immersive first-person horror house exploration prototype">
+  <title>HOLLOW HOUSE — The Residence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="./src/ui/styles.css">
+</head>
+<body>
+  <div id="game-root">
+    <canvas id="world"></canvas>
+    <div id="vignette"></div>
+    <div id="grain"></div>
+    <div id="menu" class="screen">
+      <div class="menu-noise"></div>
+      <div class="menu-top"><span class="eyebrow">A FIRST-PERSON ENVIRONMENT STUDY</span><span class="build">PRE-ALPHA · 0.1.0</span></div>
+      <div class="menu-center">
+        <div class="title-mark">HH<span> / </span>01</div>
+        <h1>HOLLOW<br><i>HOUSE</i></h1>
+        <p class="subtitle">THE RESIDENCE</p>
+        <div class="rule"></div>
+        <p class="intro">Тишина здесь звучит слишком громко.</p>
+        <button id="start-button" class="primary-button"><span>ВОЙТИ В ДОМ</span><b>↗</b></button>
+        <p id="load-status" class="load-status">ПОДГОТОВКА ОКРУЖЕНИЯ</p>
+      </div>
+      <div class="menu-bottom"><span>ОДИН ДОМ · ТРИ УРОВНЯ · БЕСКОНЕЧНО ДЕТАЛЕЙ</span><span>НАЖМИТЕ, ЧТОБЫ НАЧАТЬ</span></div>
+    </div>
+    <div id="hud" class="hidden">
+      <div class="hud-top">
+        <div class="location"><span class="live-dot"></span><div><small>ЛОКАЦИЯ</small><strong id="floor-label">ПЕРВЫЙ ЭТАЖ</strong></div></div>
+        <div class="hud-right"><span id="clock">21:43</span><span class="separator">/</span><span id="quality-label">ULTRA</span></div>
+      </div>
+      <div class="crosshair"><span></span><i></i></div>
+      <div id="interaction" class="interaction hidden"><small>ВЗАИМОДЕЙСТВИЕ</small><strong><kbd>E</kbd><span id="interaction-label">Открыть дверь</span></strong></div>
+      <div class="hud-bottom">
+        <div class="objective"><small>ИССЛЕДОВАНИЕ</small><strong id="objective-text">Осмотритесь. Изучите дом.</strong></div>
+        <div class="floor-indicator"><span>ВЕРХ</span><i></i><b id="floor-number">01</b><i></i><span>НИЗ</span></div>
+      </div>
+      <div id="mobile-controls" class="mobile-controls">
+        <div id="joystick" class="joystick"><div id="joystick-knob"></div></div>
+        <div id="look-zone"></div>
+        <button id="mobile-interact" class="mobile-action">E</button>
+        <button id="mobile-menu" class="mobile-menu">Ⅱ</button>
+      </div>
+      <div id="pause-hint" class="pause-hint hidden">НАЖМИТЕ ESC, ЧТОБЫ ВЕРНУТЬСЯ В МЕНЮ</div>
+    </div>
+    <div id="pause-screen" class="screen hidden">
+      <div class="pause-card"><span class="eyebrow">HOLLOW HOUSE / PAUSE</span><h2>ПАУЗА</h2><p>Дом никуда не денется.</p><button id="resume-button" class="primary-button"><span>ПРОДОЛЖИТЬ</span><b>↗</b></button><button id="restart-button" class="text-button">НАЧАТЬ ЗАНОВО</button></div>
+    </div>
+    <div id="error-screen" class="screen hidden"><div class="pause-card"><span class="eyebrow">ОШИБКА РЕНДЕРИНГА</span><h2>НЕ УДАЛОСЬ<br>ЗАПУСТИТЬ СЦЕНУ</h2><p id="error-message">Проверьте поддержку WebGL в браузере.</p><button class="text-button" onclick="location.reload()">ПЕРЕЗАГРУЗИТЬ</button></div></div>
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
