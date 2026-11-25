@@ -35,7 +35,7 @@ export class House {
     for (let level = -1; level <= 1; level++) {
       buildFloorDeck(this.scene, m, this.colliders, level, level * 3.5, false);
       buildLevelArchitecture(this.scene, m, this.colliders, this.interactables, level);
-      createFurniture(this.scene, m, level);
+      createFurniture(this.scene, m, level, this.colliders);
       addDecor(this.scene, m, level);
     }
 
