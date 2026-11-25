@@ -74,10 +74,14 @@ export function createFurniture(scene, mats, level, colliders = []) {
   if (level === 0) {
     // North-west: the living room.
     box(group, mats.rug, -5.1, y + .025, -3.35, 6.1, .04, 4.7);
-    sofa(group, mats, -5.1, y, -4.9, 0);\n    blocker(colliders, -5.1, -4.9, 2.65, .94, level);
-    sofa(group, mats, -5.1, y, -1.35, Math.PI);\n    blocker(colliders, -5.1, -1.35, 2.65, .94, level);
-    table(group, mats, -5.1, y, -3.2, 1.45, .9);\n    blocker(colliders, -5.1, -3.2, 1.45, .9, level);
-    cabinet(group, mats, -8.25, y, -3.2, .35, 1.25, 2.6, 0);\n    blocker(colliders, -8.25, -3.2, .42, 2.6, level);
+    sofa(group, mats, -5.1, y, -4.9, 0);
+    blocker(colliders, -5.1, -4.9, 2.65, .94, level);
+    sofa(group, mats, -5.1, y, -1.35, Math.PI);
+    blocker(colliders, -5.1, -1.35, 2.65, .94, level);
+    table(group, mats, -5.1, y, -3.2, 1.45, .9);
+    blocker(colliders, -5.1, -3.2, 1.45, .9, level);
+    cabinet(group, mats, -8.25, y, -3.2, .35, 1.25, 2.6, 0);
+    blocker(colliders, -8.25, -3.2, .42, 2.6, level);
     box(group, mats.black, -9.34, y + 1.65, -3.2, .06, 1.7, 2.2);
     box(group, mats.screen, -9.29, y + 1.67, -3.2, .04, 1.48, 1.98);
     plant(group, mats, -2.25, y, -5.65, 1.25);
@@ -86,18 +90,21 @@ export function createFurniture(scene, mats, level, colliders = []) {
       const x = 1.4 + i * 1.46;
       box(group, mats.trim, x, y + .48, -5.75, 1.32, .92, .72);
       box(group, mats.darkWood, x, y + .96, -5.75, 1.38, .1, .78);
-      box(group, mats.darkWood, x, y + .48, -5.36, 1.2, .72, .035);\n      blocker(colliders, x, -5.75, 1.32, .72, level);
+      box(group, mats.darkWood, x, y + .48, -5.36, 1.2, .72, .035);
+      blocker(colliders, x, -5.75, 1.32, .72, level);
       box(group, mats.brass, x + .42, y + .5, -5.31, .035, .22, .035);
     }
     box(group, mats.darkWood, 4.65, y + .98, -3.65, 3.6, .14, 1.35);
-    box(group, mats.trim, 4.65, y + .9, -3.65, 3.45, .04, 1.2);\n    blocker(colliders, 4.65, -3.65, 3.6, 1.35, level);
+    box(group, mats.trim, 4.65, y + .9, -3.65, 3.45, .04, 1.2);
+    blocker(colliders, 4.65, -3.65, 3.6, 1.35, level);
     for (let i = 0; i < 3; i++) {
       box(group, mats.darkWood, 3.2 + i * 1.45, y + .47, -2.8, .48, .9, .48);
       box(group, mats.fabric, 3.2 + i * 1.45, y + .95, -2.8, .5, .12, .5);
     }
     // South-east: dining area.
     box(group, mats.rug, 4.55, y + .025, 3.45, 5.1, .04, 4.4);
-    table(group, mats, 4.65, y, 3.45, 2.35, 1.2);\n    blocker(colliders, 4.65, 3.45, 2.35, 1.2, level);
+    table(group, mats, 4.65, y, 3.45, 2.35, 1.2);
+    blocker(colliders, 4.65, 3.45, 2.35, 1.2, level);
     for (let i = 0; i < 4; i++) {
       const side = i < 2 ? -1 : 1;
       const z = 3.45 + (i % 2 ? .72 : -.72);
@@ -105,29 +112,38 @@ export function createFurniture(scene, mats, level, colliders = []) {
       box(group, mats.fabric, 4.65 + side * 1.48, y + .94, z, .56, .12, .56);
     }
     // South-west: study and entry bench.
-    table(group, mats, -5.4, y, 3.8, 2.1, .9);\n    blocker(colliders, -5.4, 3.8, 2.1, .9, level);
-    cabinet(group, mats, -8.2, y, 4.4, .65, 2.15, 2.4);\n    blocker(colliders, -8.2, 4.4, .65, 2.4, level);
-    box(group, mats.leather, -4.8, y + .48, 5.05, 1.2, .76, .8);\n    blocker(colliders, -4.8, 5.05, 1.2, .8, level);
+    table(group, mats, -5.4, y, 3.8, 2.1, .9);
+    blocker(colliders, -5.4, 3.8, 2.1, .9, level);
+    cabinet(group, mats, -8.2, y, 4.4, .65, 2.15, 2.4);
+    blocker(colliders, -8.2, 4.4, .65, 2.4, level);
+    box(group, mats.leather, -4.8, y + .48, 5.05, 1.2, .76, .8);
+    blocker(colliders, -4.8, 5.05, 1.2, .8, level);
     plant(group, mats, -2.4, y, 5.25, .9);
   }
 
   if (level === 1) {
     // Primary suite north-west.
-    bed(group, mats, -5.2, y, -3.2, 2.5, 3.05);\n    blocker(colliders, -5.2, -3.2, 2.5, 3.05, level);
-    cabinet(group, mats, -8.5, y, -3.5, .55, 2.3, 2.4);\n    blocker(colliders, -8.5, -3.5, .6, 2.4, level);
+    bed(group, mats, -5.2, y, -3.2, 2.5, 3.05);
+    blocker(colliders, -5.2, -3.2, 2.5, 3.05, level);
+    cabinet(group, mats, -8.5, y, -3.5, .55, 2.3, 2.4);
+    blocker(colliders, -8.5, -3.5, .6, 2.4, level);
     table(group, mats, -2.55, y, -4.8, 1.2, .62);
     // Bedroom north-east.
-    bed(group, mats, 4.2, y, -3.4, 2.1, 2.7);\n    blocker(colliders, 4.2, -3.4, 2.1, 2.7, level);
+    bed(group, mats, 4.2, y, -3.4, 2.1, 2.7);
+    blocker(colliders, 4.2, -3.4, 2.1, 2.7, level);
     cabinet(group, mats, 8.2, y, -4.6, .6, 2.2, 2.3);
     box(group, mats.rug, 4.2, y + .025, -3.2, 3.7, .04, 4.1);
     // Child / guest room south-west.
-    bed(group, mats, -5.25, y, 3.2, 2, 2.55);\n    blocker(colliders, -5.25, 3.2, 2, 2.55, level);
+    bed(group, mats, -5.25, y, 3.2, 2, 2.55);
+    blocker(colliders, -5.25, 3.2, 2, 2.55, level);
     table(group, mats, -2.55, y, 4.55, 1.4, .72);
     cabinet(group, mats, -8.45, y, 4.25, .5, 1.9, 2);
     // Bathroom south-east: double vanity, tub and shower screen.
     box(group, mats.tile, 4.3, y + .025, 3.45, 5.5, .04, 5.5);
-    box(group, mats.ceramic, 7.45, y + .35, 4.75, 2.1, .65, 1.2);\n    blocker(colliders, 7.45, 4.75, 2.1, 1.2, level);
-    box(group, mats.ceramic, 4.1, y + .48, 5.25, 1.5, .95, .72);\n    blocker(colliders, 4.1, 5.25, 1.5, .72, level);
+    box(group, mats.ceramic, 7.45, y + .35, 4.75, 2.1, .65, 1.2);
+    blocker(colliders, 7.45, 4.75, 2.1, 1.2, level);
+    box(group, mats.ceramic, 4.1, y + .48, 5.25, 1.5, .95, .72);
+    blocker(colliders, 4.1, 5.25, 1.5, .72, level);
     box(group, mats.mirror, 4.1, y + 1.65, 4.78, 1.55, 1.35, .06);
     box(group, mats.trim, 4.1, y + .99, 4.78, 1.7, .06, .12);
     cylinder(group, mats.metal, 7.6, y + 1.85, 2.35, .035, .035, 1.5, 12);
@@ -138,15 +154,18 @@ export function createFurniture(scene, mats, level, colliders = []) {
   if (level === -1) {
     // Utility / boiler room.
     box(group, mats.concrete, -5.1, y + .03, -3.1, 6.1, .05, 5.4);
-    box(group, mats.metal, -7.4, y + 1.3, -4.2, 1.6, 2.6, 1.25);\n    blocker(colliders, -7.4, -4.2, 1.6, 1.25, level);
+    box(group, mats.metal, -7.4, y + 1.3, -4.2, 1.6, 2.6, 1.25);
+    blocker(colliders, -7.4, -4.2, 1.6, 1.25, level);
     box(group, mats.metal, -7.4, y + 2.65, -4.2, .95, .12, .82);
     for (let i = 0; i < 4; i++) cylinder(group, mats.brass, -8.1 + i * .45, y + 1.4, -3.5, .045, .045, 2.1, 12);
     // Laundry.
     box(group, mats.ceramic, 3.2, y + .48, -4.8, 1.35, .95, 1.2);
-    box(group, mats.metal, 3.2, y + .48, -4.8, 1.15, .8, 1.08);\n    blocker(colliders, 3.2, -4.8, 1.35, 1.2, level);
+    box(group, mats.metal, 3.2, y + .48, -4.8, 1.15, .8, 1.08);
+    blocker(colliders, 3.2, -4.8, 1.35, 1.2, level);
     cylinder(group, mats.black, 3.2, y + .48, -4.23, .3, .3, .08, 24).rotation.x = Math.PI / 2;
     box(group, mats.ceramic, 5.05, y + .48, -4.8, 1.35, .95, 1.2);
-    box(group, mats.metal, 5.05, y + .48, -4.8, 1.15, .8, 1.08);\n    blocker(colliders, 5.05, -4.8, 1.35, 1.2, level);
+    box(group, mats.metal, 5.05, y + .48, -4.8, 1.15, .8, 1.08);
+    blocker(colliders, 5.05, -4.8, 1.35, 1.2, level);
     cylinder(group, mats.black, 5.05, y + .48, -4.23, .3, .3, .08, 24).rotation.x = Math.PI / 2;
     // Storage shelving.
     for (let i = 0; i < 3; i++) {
@@ -156,9 +175,11 @@ export function createFurniture(scene, mats, level, colliders = []) {
       box(group, mats.darkWood, -8.1, y + 2.2, z, 2.1, .12, .5);
     }
     // Workshop bench and vice.
-    table(group, mats, 3.8, y, 4.4, 3.2, 1.1);\n    blocker(colliders, 3.8, 4.4, 3.2, 1.1, level);
+    table(group, mats, 3.8, y, 4.4, 3.2, 1.1);
+    blocker(colliders, 3.8, 4.4, 3.2, 1.1, level);
     box(group, mats.metal, 3.3, y + 1.02, 4.4, .34, .2, .28);
-    cabinet(group, mats, 8.2, y, 4.6, .55, 2.1, 2.2);\n    blocker(colliders, 8.2, 4.6, .6, 2.2, level);
+    cabinet(group, mats, 8.2, y, 4.6, .55, 2.1, 2.2);
+    blocker(colliders, 8.2, 4.6, .6, 2.2, level);
     for (let i = 0; i < 5; i++) {
       const tool = new THREE.Mesh(new THREE.BoxGeometry(.55, .035, .06), mats.metal);
       tool.position.set(2.8 + i * .48, y + 1.47, 4.32); group.add(tool);

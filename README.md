@@ -17,7 +17,8 @@ Open index.html through GitHub Pages or any static HTTP server. The project uses
 - Three connected walkable levels: basement, ground floor and upper floor.
 - Modular room architecture, real window openings, hinged doors, stairwell, porch and roof silhouette.
 - Procedural PBR-style materials for wood, plaster, tile, concrete, fabric and metal.
-- Environment reflections, ACES tone mapping, soft shadows, fog, warm interior lighting and cool night fill.\n- Desktop post-processing: GTAO contact shading and restrained bloom; mobile rendering automatically uses a lighter path.
+- Environment reflections, ACES tone mapping, soft shadows, fog, warm interior lighting and cool night fill.
+- Desktop post-processing: GTAO contact shading and restrained bloom; mobile rendering automatically uses a lighter path.
 - Individually modelled furniture and architectural details with collision volumes for the main solid objects.
 - Mobile touch controls and desktop pointer-lock controls.
 
