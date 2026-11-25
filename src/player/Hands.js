@@ -448,11 +448,11 @@ export class FirstPersonHands {
     this.pose = {
       leftPosition: {
         rest: new THREE.Vector3(-0.315, -0.585, -0.64),
-        phone: new THREE.Vector3(0.025, -0.405, -0.525)
+        phone: new THREE.Vector3(0.065, -0.405, -0.525)
       },
       rightPosition: {
         rest: new THREE.Vector3(0.315, -0.605, -0.66),
-        phone: new THREE.Vector3(0.245, -0.420, -0.495)
+        phone: new THREE.Vector3(0.225, -0.420, -0.495)
       },
       leftRotation: {
         rest: new THREE.Euler(-0.22, 0.10, 0.23),
