@@ -117,9 +117,17 @@ export function buildFloorDeck(scene, mats, colliders, level, y, tile = false) {
   addDeck(7.05, (-6.6 - 3.25) / 2, 3.2, 3.35);
   addDeck(7.05, (3.25 + 6.6) / 2, 3.2, 3.35);
 }
+function buildCeiling(scene, mats, y) {
+  const add = (x, z, w, d) => addBox(scene, mats.ceiling, x, y + 3.22, z, w, .08, d);
+  add((-9.65 + 5.45) / 2, 0, 15.1, 13.2);
+  add(9.15, 0, 1, 13.2);
+  add(7.05, (-6.6 - 3.25) / 2, 3.2, 3.35);
+  add(7.05, (3.25 + 6.6) / 2, 3.2, 3.35);
+}
 export function buildLevelArchitecture(scene, mats, colliders, interactables, level) {
   const y = level * 3.5;
   const outer = level === -1 ? mats.wallDark : mats.wall;
+  buildCeiling(scene, mats, y);
   wallX(scene, outer, colliders, level, -6.65, y, -9.65, 9.65, [
     { center: -5.4, width: 2, type: 'window' }, { center: 1.3, width: 2.25, type: 'window' }, { center: 6, width: 2, type: 'window' }
   ]);
