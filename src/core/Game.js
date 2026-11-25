@@ -10,6 +10,9 @@ import { createLighting } from '../world/Lighting.js';
 import { Input } from './Input.js';
 import { Player } from './Player.js';
 import { HUD } from '../ui/HUD.js';
+import { DebugTools } from '../world/DebugTools.js';
+import { runGeometryAudit } from '../world/GeometryAudit.js';
+import { roomAt } from '../world/RoomZones.js';
 export class Game {
   constructor(elements) {
     this.elements = elements; this.running = false; this.composer = null; this.clock = new THREE.Timer();
@@ -29,12 +32,18 @@ export class Game {
   isMobile() { return matchMedia('(pointer: coarse)').matches || window.innerWidth < 760; }
   async init() {
     const pmrem = new THREE.PMREMGenerator(this.renderer);
-    const envScene = new RoomEnvironment(); this.scene.environment = pmrem.fromScene(envScene, .04).texture;
-    pmrem.dispose(); envScene.dispose?.();
-    this.house = new House(this.scene); this.house.build();
+    const envScene = new RoomEnvironment();
+    this.environmentTarget = pmrem.fromScene(envScene, 0.04);
+    this.scene.environment = this.environmentTarget.texture;
+    pmrem.dispose();
+    envScene.dispose?.();
+    this.house = new House(this.scene, { maxAnisotropy: this.renderer.capabilities.getMaxAnisotropy() }); this.house.build();
     this.lights = createLighting(this.scene, this.house);
+    this.geometryReport = runGeometryAudit(this.scene, this.house.colliders);
+    console.info('HOLLOW HOUSE geometry audit', this.geometryReport);
+    this.debugTools = new DebugTools(this.scene, this.house.colliders, this.renderer, this.house);
     this.player = new Player(this.camera, this.input, this.house.colliders); this.player.reset();
-    this.hud.setQuality(this.quality); this.hud.setFloor(0); this.hud.setInteraction('');
+    this.hud.setQuality(this.quality); this.hud.setFloor(0); this.hud.setRoom(roomAt(0, this.player.position.x, this.player.position.z)); this.hud.setInteraction('');
     this.hud.setObjective('Осмотритесь. Изучите дом.');
     this.input.onInteract = () => this.interact();
     this.input.onPause = () => { this.pause(); this.elements.pause.classList.remove('hidden'); };
@@ -44,7 +53,7 @@ export class Game {
     });
     this.setupPostProcessing();
     window.addEventListener('resize', this.onResize, { passive: true });
-    this.renderer.compile(this.scene, this.camera);
+    await this.renderer.compileAsync(this.scene, this.camera);
     this.resize();
     if (this.composer) this.composer.render();
     else this.renderer.render(this.scene, this.camera);
@@ -72,7 +81,8 @@ export class Game {
       composer.setSize(width, height);
       composer.addPass(new RenderPass(this.scene, this.camera));
       const gtao = new GTAOPass(this.scene, this.camera, width, height);
-      gtao.blendIntensity = 0.82;
+      gtao.blendIntensity = 0.78;
+      gtao.output = GTAOPass.OUTPUT.Denoise;
       gtao.updateGtaoMaterial({ radius: 0.34, samples: 16 });
       composer.addPass(gtao);
       const bloom = new UnrealBloomPass(new THREE.Vector2(width, height), 0.16, 0.32, 0.88);
@@ -112,7 +122,7 @@ export class Game {
       item.object.getWorldPosition(this.tmpPosition);
       const delta = this.tmpPosition.clone().sub(eye), distance = delta.length();
       if (distance > bestDistance) continue;
-      delta.normalize(); if (delta.dot(forward) < .58) continue;
+      delta.normalize(); if (delta.dot(forward) < .35) continue;
       best = item; bestDistance = distance;
     }
     if (best) {
@@ -129,8 +139,22 @@ export class Game {
     const dt = Math.min(this.clock.getDelta(), .05);
     this.player.update(dt); this.camera.rotation.y = this.input.yaw; this.camera.rotation.x = this.input.pitch;
     this.house.update(dt); this.lights.update(dt); this.updateInteractionHint(); this.hud.setFloor(this.player.level);
+    this.debugTools?.update(dt, this.player);
+    this.hud.setRoom(roomAt(this.player.level, this.player.position.x, this.player.position.z));
     if (this.composer) this.composer.render();
     else this.renderer.render(this.scene, this.camera);
+  }
+  dispose() {
+    this.pause();
+    window.removeEventListener('resize', this.onResize);
+    this.debugTools?.dispose();
+    this.input?.dispose?.();
+    this.lights?.dispose?.();
+    this.house?.dispose?.();
+    this.composer?.dispose();
+    this.renderer.dispose();
+    this.clock.disconnect();
+    this.clock.dispose();
   }
   updateInteractionHint() {
     const eye = this.camera.position, forward = this.camera.getWorldDirection(this.tmpDirection);
@@ -138,7 +162,7 @@ export class Game {
     for (const item of this.house.interactables) {
       item.object.getWorldPosition(this.tmpPosition);
       const delta = this.tmpPosition.clone().sub(eye), distance = delta.length();
-      if (distance < bestDistance && delta.normalize().dot(forward) > .58) { target = item; bestDistance = distance; }
+      if (distance < bestDistance && delta.normalize().dot(forward) > .35) { target = item; bestDistance = distance; }
     }
     if (target !== this.interactionTarget) {
       this.interactionTarget = target;

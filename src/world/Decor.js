@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { floorY, roomHeight } from './Layout.js';
 function cube(scene, mat, pos, size, rotation = 0) {
   const mesh = new THREE.Mesh(new THREE.BoxGeometry(size[0], size[1], size[2]), mat);
   mesh.position.set(...pos); mesh.rotation.y = rotation; mesh.castShadow = true; mesh.receiveShadow = true; scene.add(mesh); return mesh;
@@ -6,19 +7,33 @@ function cube(scene, mat, pos, size, rotation = 0) {
 function picture(scene, mats, x, y, z, rotation = 0, variant = 0) {
   cube(scene, mats.darkWood, [x, y, z], [1.05, .78, .09], rotation);
   const art = new THREE.Mesh(new THREE.PlaneGeometry(.87, .6), new THREE.MeshStandardMaterial({ color: variant === 0 ? 0x6d6559 : variant === 1 ? 0x777b79 : 0x463d36, roughness: .92, emissive: variant === 2 ? 0x120d0a : 0x000000 }));
-  art.position.set(x, y, z + .052); art.rotation.y = rotation; scene.add(art);
+  if (Math.abs(rotation) > 0.1) art.position.set(x + .052, y, z); else art.position.set(x, y, z + .052);
+  art.rotation.y = rotation; scene.add(art);
   const line = new THREE.Mesh(new THREE.BoxGeometry(.62, .025, .025), mats.brass);
-  line.position.set(x, y - .12, z + .075); line.rotation.y = rotation; scene.add(line);
+  if (Math.abs(rotation) > 0.1) line.position.set(x + .075, y - .12, z); else line.position.set(x, y - .12, z + .075);
+  line.rotation.y = rotation; scene.add(line);
 }
 function wallTrim(scene, mats, level) {
-  const y = level * 3.5;
+  const y = floorY(level);
+  cube(scene, mats.trim, [0, y + .12, -6.48], [18.9, .18, .08]);
+  // The front baseboard stops at the entry opening instead of crossing the threshold.
+  cube(scene, mats.trim, [-5.1375, y + .12, 6.48], [8.525, .18, .08]);
+  cube(scene, mats.trim, [5.1375, y + .12, 6.48], [8.525, .18, .08]);
   for (const z of [-6.48, 6.48]) {
-    cube(scene, mats.trim, [0, y + .12, z], [18.9, .18, .08]);
-    cube(scene, mats.ceiling, [0, y + 3.12, z], [18.9, .12, .1]);
+    cube(scene, mats.ceiling, [0, y + roomHeight(level) - 0.06, z], [18.9, .12, .1]);
   }
   for (const x of [-9.48, 9.48]) {
     cube(scene, mats.trim, [x, y + .12, 0], [.08, .18, 12.8]);
-    cube(scene, mats.ceiling, [x, y + 3.12, 0], [.1, .12, 12.8]);
+    cube(scene, mats.ceiling, [x, y + roomHeight(level) - 0.06, 0], [.1, .12, 12.8]);
+  }
+  // Interior skirting is split at each doorway, so it never cuts across an opening.
+  for (const [a, b] of [[-9.5,-3.74],[-2.46,2.41],[3.69,6.075],[8.025,9.5]]) {
+    const width = b - a;
+    for (const side of [-1, 1]) cube(scene, mats.trim, [(a+b)/2, y + .10, .15 + side*.078], [width, .16, .035]);
+  }
+  for (const [a, b] of [[-6.5,-3.76],[-2.44,2.54],[3.76,6.5]]) {
+    const depth = b - a;
+    for (const side of [-1, 1]) cube(scene, mats.trim, [.10 + side*.078, y + .10, (a+b)/2], [.035, .16, depth]);
   }
 }
 function curtains(scene, mats, x, y, z, width) {
@@ -39,7 +54,7 @@ function bookStack(scene, mats, x, y, z, count = 4) {
   }
 }
 export function addDecor(scene, mats, level) {
-  const y = level * 3.5;
+  const y = floorY(level);
   wallTrim(scene, mats, level);
   if (level === 0) {
     picture(scene, mats, -5.2, y + 2.38, -6.49, 0, 1);
@@ -62,7 +77,7 @@ export function addDecor(scene, mats, level) {
     bookStack(scene, mats, -2.55, y + .95, -4.8, 3);
   }
   if (level === -1) {
-    for (let x = -8; x <= 8; x += 4) cube(scene, mats.darkWood, [x, y + 3.12, 0], [.18, .18, 12.8]);
+    for (let x = -8; x <= 8; x += 4) cube(scene, mats.darkWood, [x, y + roomHeight(level) - 0.10, 0], [.18, .18, 12.8]);
     picture(scene, mats, -9.49, y + 2.25, -3.2, Math.PI / 2, 2);
     cube(scene, new THREE.MeshStandardMaterial({ color: 0x8f6b39, roughness: .8 }), [-7.5, y + 2.55, -6.49], [.68, .32, .04]);
   }
@@ -72,7 +87,7 @@ export function createDust(scene) {
   const positions = new Float32Array(count * 3);
   for (let i = 0; i < count; i++) {
     positions[i * 3] = (Math.random() - .5) * 18;
-    positions[i * 3 + 1] = Math.random() * 8 - 3.7;
+    positions[i * 3 + 1] = -2.45 + Math.random() * 8.1;
     positions[i * 3 + 2] = (Math.random() - .5) * 12;
   }
   const geometry = new THREE.BufferGeometry();
